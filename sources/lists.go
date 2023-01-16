@@ -42,7 +42,7 @@ func GetList(list string) ([]string, error) {
 		}
 	}
 
-	if err := scanner.Err(); err != nil {
+	if err = scanner.Err(); err != nil {
 		return nil, err
 	}
 	return out, nil

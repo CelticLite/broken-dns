@@ -43,7 +43,8 @@ func processName(ctx context.Context, w *nameWork) error {
 		if first {
 			action = true
 			v("checking: (%q) %q", w.Name, labels[i])
-			result, err := queryNSParallel(labels[i], servers)
+			var result *queryGroup
+			result, err = queryNSParallel(labels[i], servers)
 			if err != nil {
 				err2 := addFun(nil, err)
 				if err2 != nil {
@@ -61,7 +62,7 @@ func processName(ctx context.Context, w *nameWork) error {
 				v("no nameservers found for (%q) %q", w.Name, labels[i])
 				// in this case, sometimes the parent domain's nameservers are still authoritative
 				// if no nameservers but I there ARE authoritative answers, iterate again on the same server list (of authoritative only?)
-				authoritativeServers := result.GetAuthorativeNS()
+				authoritativeServers := result.GetAuthoritativeNS()
 				if len(authoritativeServers) > 0 {
 					v("using parents authoritative nameservers for %q: %v", labels[i], authoritativeServers)
 					servers = authoritativeServers
@@ -88,7 +89,6 @@ func processName(ctx context.Context, w *nameWork) error {
 				// check for expected NS
 				w.Problems += checkExpectedNS(result)
 			}
-
 		} else {
 			// get servers from cache
 			v("waiting for cache to be populated for (%q)%q", w.Name, labels[i])

@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// Package cache contains a generic cachinging tool to be used with multiple concurrent goroutines
+// Package cache contains a generic caching tool to be used with multiple concurrent goroutines
 // that all may need to access data at the same time.
 // if the data is not in the cache, the first goroutine gets informed and is allowed to enter it while the other's wait
 package cache
@@ -40,14 +40,14 @@ func New[T any]() *Cache[T] {
 
 // AddCheck creates and locks the cache for the provided key, the returned function unlocks it when a value is added
 // if AddFunc is never called the lock is held forever
-// bool returns true if the calling thread wins the addFunc race and is responsible for addding, if false then call GetWait after to get the resulting value
+// bool returns true if the calling thread wins the addFunc race and is responsible for adding, if false then call GetWait after to get the resulting value
 func (c *Cache[T]) AddCheck(key string) (AddFunc[T], bool) {
 	// get channel map lock
 	c.lm.Lock()
 	// test if channel already exists
 	if _, ok := c.locks[key]; ok {
-		// this routine lost the race condition, signal to callaing thread to call GetWait
-		//return nil, fmt.Errorf("unsupported add: key already exists for %q", key)
+		// this routine lost the race condition, signal to calling thread to call GetWait
+		// return nil, fmt.Errorf("unsupported add: key already exists for %q", key)
 		c.lm.Unlock()
 		return nil, false
 	}
@@ -62,7 +62,7 @@ func (c *Cache[T]) AddCheck(key string) (AddFunc[T], bool) {
 		// check if there was an error
 		if err != nil {
 			c.locks[key] <- err
-			// this puts the channel lock in an unrecoverable state if the error if overcomable
+			// this puts the channel lock in an unrecoverable state if the error if recoverable
 		}
 		// perform add
 		c.cm.Lock()

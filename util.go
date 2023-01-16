@@ -27,7 +27,7 @@ func stringMapToArrayKeys(m map[string]bool) []string {
 }
 
 // SplitDomainNameWithParent splits a name string into it's labels with each parent.
-func SplitDomainNameWithParent(s string) (labels []string) {
+func SplitDomainNameWithParent(s string) []string {
 	if s == "" {
 		return nil
 	}
@@ -39,6 +39,8 @@ func SplitDomainNameWithParent(s string) (labels []string) {
 	} else {
 		fqdnEnd = len(s)
 	}
+
+	var labels []string
 
 	switch len(idx) {
 	case 0:

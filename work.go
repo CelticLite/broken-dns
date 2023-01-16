@@ -29,7 +29,7 @@ func worker(ctx context.Context, workChan chan jobs.Job) error {
 			return err
 		case workItem := <-workChan:
 			var err error
-			//v("worker: %+v", workItem)
+			// v("worker: %+v", workItem)
 			switch v := workItem.(type) {
 			case *nameWork:
 				err = processName(ctx, v)

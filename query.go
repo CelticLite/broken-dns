@@ -68,7 +68,7 @@ type queryGroup struct {
 	NS      []string
 }
 
-func (g *queryGroup) GetAuthorativeNS() []string {
+func (g *queryGroup) GetAuthoritativeNS() []string {
 	out := make([]string, 0, len(g.Results))
 	for server := range g.Results {
 		if g.Results[server].Authoritative {
@@ -145,8 +145,8 @@ func queryNSParallel(domain string, servers []string) (*queryGroup, error) {
 
 func queryNSServer(server, domain string) ([]string, bool, error) {
 	domain = dns.Fqdn(domain)
-	//server = strings.TrimSuffix(server, ".")
-	//v("dns query: @%s NS %s", server, domain)
+	// server = strings.TrimSuffix(server, ".")
+	// v("dns query: @%s NS %s", server, domain)
 	m := new(dns.Msg)
 	m.SetQuestion(domain, dns.TypeNS)
 	m.RecursionDesired = false
@@ -157,9 +157,8 @@ func queryNSServer(server, domain string) ([]string, bool, error) {
 		in, _, err = dnsClient.Exchange(m, net.JoinHostPort(server, "53"))
 		if err == nil {
 			break
-		} else {
-			v("queryNSServer(%q, @%q) try %d, error: %s", domain, server, i+1, err)
 		}
+		v("queryNSServer(%q, @%q) try %d, error: %s", domain, server, i+1, err)
 		time.Sleep(time.Second)
 	}
 	if err != nil {
@@ -171,7 +170,7 @@ func queryNSServer(server, domain string) ([]string, bool, error) {
 	out := make([]string, 0, 2)
 	for _, r := range append(in.Answer, in.Ns...) {
 		if t, ok := r.(*dns.NS); ok {
-			//v("dns answer NS @%s\t%s:\t%s\n", server, domain, t.Ns)
+			// v("dns answer NS @%s\t%s:\t%s\n", server, domain, t.Ns)
 			t.Ns = cleanDomain(t.Ns)
 			out = append(out, t.Ns)
 		}

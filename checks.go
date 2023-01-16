@@ -18,7 +18,7 @@ import "github.com/miekg/dns"
 
 func checkEqualResultResponse(r *queryGroup) uint {
 	totalServers := len(r.NS)
-	var found uint = 0
+	var found uint
 
 	for server := range r.Results {
 		if r.Results[server].Err != nil {
@@ -38,7 +38,7 @@ func checkEqualResultResponse(r *queryGroup) uint {
 }
 
 func checkLame(q *queryGroup) bool {
-	//v("checkLame(%q)", q.Domain)
+	// v("checkLame(%q)", q.Domain)
 	r, err := queryNSParallel(q.Domain, q.NS)
 	lame := false
 	if err != nil {
@@ -68,9 +68,9 @@ func checkLame(q *queryGroup) bool {
 }
 
 // TODO this can be made more efficient, lots of redundant checks
-// test of returned ns are withing the expected set
+// test of returned ns are within the expected set
 func checkExpectedNS(r *queryGroup) uint {
-	var found uint = 0
+	var found uint
 	if len(expectedNameServers) > 0 {
 		// iterate over all found NSd
 		for _, ns := range r.NS {

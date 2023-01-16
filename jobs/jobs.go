@@ -17,6 +17,7 @@ package jobs
 
 import (
 	"context"
+	"errors"
 	"sync"
 )
 
@@ -53,8 +54,8 @@ func (j *Jobs) Go(worker func(context.Context, chan Job) error) {
 	go func() {
 		err := worker(j.jobCtx, j.jobChan)
 		if err != nil {
-			//log.Printf("Go error: %s", err)
-			if err != context.Canceled {
+			// log.Printf("Go error: %s", err)
+			if !errors.Is(err, context.Canceled) {
 				// if multiple threads error and try to write at the same time
 				// this can panic due to the first error closing the channel
 				// for now, errChan is not closed to prevent this panic
@@ -110,7 +111,7 @@ func (j *Jobs) Wait() error {
 		// and once errChan is closed this will cause a panic.
 		// this is fixed by having Go() workers not return the context.Canceled error
 		j.cancel()
-		//close(j.errChan) // don't close errChan to allow multiple errors to be sent without causing a panic
+		// close(j.errChan) // don't close errChan to allow multiple errors to be sent without causing a panic
 		return err
 	}
 
@@ -120,8 +121,8 @@ func (j *Jobs) Wait() error {
 		// carry on
 		break
 	case err := <-j.errChan:
-		// all worksers should have already finished by now, so no need to cancel, but calling just in case
-		// if somehow a worker is canceld here, it will likely return an error and cause a panic when we close errChan
+		// all workers should have already finished by now, so no need to cancel, but calling just in case
+		// if somehow a worker is canceled here, it will likely return an error and cause a panic when we close errChan
 		j.cancel()
 		// all workers should be done by now so safe to cancel
 		close(j.errChan)
@@ -135,8 +136,8 @@ func (j *Jobs) SaveGo(saver func(context.Context, chan Job, *sync.WaitGroup) err
 	go func() {
 		err := saver(j.ctx, j.saveChan, &j.saveWg)
 		if err != nil {
-			//log.Printf("Go error: %s", err)
-			if err != context.Canceled {
+			// log.Printf("Go error: %s", err)
+			if !errors.Is(err, context.Canceled) {
 				// if multiple threads error and try to write at the same time
 				// this can panic due to the first error closing the channel
 				// for now, errChan is not closed to prevent this panic

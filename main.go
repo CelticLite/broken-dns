@@ -84,7 +84,9 @@ func main() {
 	})
 
 	// add lists
-	for _, list := range strings.Split(*useLists, ",") {
+	lists := strings.Split(*useLists, ",")
+	for i := range lists {
+		list := lists[i]
 		if list != "" {
 			inputGroup.Go(func() error {
 				names, err := sources.GetList(list)
@@ -109,7 +111,7 @@ func main() {
 }
 
 func addNameArray(names []string) {
-	//tree.addInput(names)
+	// tree.addInput(names)
 	w := make([]jobs.Job, 0, len(names))
 	for _, name := range names {
 		name = strings.ToLower(name)
@@ -133,13 +135,13 @@ func check(err error) {
 	}
 }
 
-func v(format string, d ...interface{}) {
+func v(format string, d ...any) {
 	if *verbose {
 		log.Printf(format, d...)
 	}
 }
 
-func finding(format string, d ...interface{}) {
+func finding(format string, d ...any) {
 	format2 := "[FINDING] " + format + "\n"
 	fmt.Printf(format2, d...)
 	v(format2, d...)
