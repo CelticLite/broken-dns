@@ -15,12 +15,12 @@
 package main
 
 import (
+	"broken-dns/cache"
+	"broken-dns/jobs"
+	"broken-dns/sources"
 	"context"
 	"flag"
 	"fmt"
-	"lame-dns/cache"
-	"lame-dns/jobs"
-	"lame-dns/sources"
 	"log"
 	"os"
 	"strings"

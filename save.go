@@ -15,9 +15,9 @@
 package main
 
 import (
+	"broken-dns/jobs"
 	"context"
 	"fmt"
-	"lame-dns/jobs"
 	"log"
 	"sync"
 )

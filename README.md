@@ -13,7 +13,7 @@ go build
 ## Running
 
 ```shell
-Usage of ./lame-dns:
+Usage of ./broken-dns:
   -expected-ns string
         comma-separated list of domains which we expect nameservers to be under, findings are logged otherwise
   -list string
@@ -27,13 +27,13 @@ Usage of ./lame-dns:
 ## Examples
 
 ```shell
-./lame-dns -list domain_list.txt -expected-ns googledomains.com,google.com,markmonitor.com,google
+./broken-dns -list domain_list.txt -expected-ns googledomains.com,google.com,markmonitor.com,google
 ```
 
 ## Findings
 
 Results are printed to stdout, and any logs, errors, or debug messages are printed to stderr.
-You can pipe these to different files to save each independently. ex: `./lame-dns $ARGS >results.txt 2>results.log`.
+You can pipe these to different files to save each independently. ex: `./broken-dns $ARGS >results.txt 2>results.log`.
 
 Findings:
 

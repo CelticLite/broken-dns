@@ -15,9 +15,9 @@
 package main
 
 import (
+	"broken-dns/jobs"
 	"context"
 	"fmt"
-	"lame-dns/jobs"
 )
 
 func worker(ctx context.Context, workChan chan jobs.Job) error {
