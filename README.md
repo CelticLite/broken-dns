@@ -1,4 +1,4 @@
-# Lame DNS
+# Broken DNS
 
 Lame delegation checking at scale!
 
